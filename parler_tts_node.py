@@ -8,7 +8,7 @@ import random
 
 os.environ['TRANSFORMERS_OFFLINE'] = "1"
 device = "cuda:0" if torch.cuda.is_available() else "cpu"
-tts_path = BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+tts_path = os.path.dirname(os.path.abspath(__file__))
 
 
 class Parler_TTS_PromptToAudio:
@@ -48,7 +48,7 @@ class Parler_TTS_PromptToAudio:
         generation = model.generate(input_ids=input_ids, prompt_input_ids=prompt_input_ids)
         audio_arr = generation.cpu().numpy().squeeze()
         file_name = "Audio" + ''.join(random.choice("0123456789") for _ in range(5)) + ".wav"
-        path = os.path.join(tts_path, "ComfyUI_ParlerTTS", "output", file_name)
+        path = os.path.join(tts_path, "output", file_name)
         output_path = os.path.normpath(path)
         # print(output_path)
         sf.write(output_path, audio_arr, model.config.sampling_rate)
