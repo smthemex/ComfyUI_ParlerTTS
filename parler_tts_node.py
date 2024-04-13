@@ -8,7 +8,7 @@ import random
 
 os.environ['TRANSFORMERS_OFFLINE'] = "1"
 device = "cuda:0" if torch.cuda.is_available() else "cpu"
-tts_path = BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+tts_path = os.path.dirname(os.path.abspath(__file__))
 
 
 class Parler_TTS_PromptToAudio:
