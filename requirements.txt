@@ -1,9 +1,0 @@
-accelerate==0.28.0
-descript_audio_codec==1.0.0
-huggingface_hub==0.22.1
-imageio_ffmpeg==0.4.9
-setuptools==65.5.0
-soundfile==0.12.1
-torch==2.2.2+cu121
-tqdm==4.66.2
-transformers==4.39.2
