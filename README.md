@@ -4,7 +4,7 @@ This is a simple ComfyUI custom TTS node based on Parler_tts.
 Notice：
 ------
 You can find the project for Parler-TTS here:  
-[Parler-TTS](http://https://github.com/huggingface/parler-tts) 
+[Parler-TTS](https://github.com/huggingface/parler-tts) 
 
 USING TIPS： 
 -----
