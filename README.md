@@ -1,10 +1,10 @@
 # ComfyUI_ParlerTTS
-This is a simple ComfyUI custom TTS node based on Parler_tts.
+This is a simple ComfyUI custom TTS node based on Parler_tts.   
+Now you can using TTS audio for “ComfyUI-VideoHelperSuite node”   
 
 Notice：
 ------
-You can find the project for Parler-TTS here:  
-[Parler-TTS](https://github.com/huggingface/parler-tts) 
+You can find the project for Parler-TTS here: [Parler-TTS](https://github.com/huggingface/parler-tts) 
 
 USING TIPS： 
 -----
@@ -29,13 +29,15 @@ Example:
   
   `Method 1`  
     
-  Download all the files in the [link](https://huggingface.co/parler-tts/parler_tts_mini_v0.1/tree/main) and store them in a folder that you have customized.   
+  Download all the files in the [link](https://huggingface.co/parler-tts/parler_tts_mini_v0.1/tree/main) and store them in a folder that you have customized. model_offline should be switch to True.
   
-  `Method 2`  
-
-  I need more time.  
+  `Method 2` 
   
-  1.4 After downloading the model, copy its path and fill in the path in the node path column of comfyui  
+  Fill in repo_id: parler tts/parler_tts_mini_v0.1 in the path, switch the model_offline switch to false, and you can directly download the model link using huggingface. If you are a user in Chinese Mainland, you can use the downloadmodel node to download the model  
+  
+  在路径填写repo_id：parler-tts/parler_tts_mini_v0.1，将model_offline开关切换至false，就能使用huggingface直接下载模型链接。如果你是中国大陆用户，可使用downloadmodel 节点下载模型。  
+  
+  1.4 Mode path  
   
  `Notice: Please refer to the usage method of "/" in the default node path for the path format of Windows`  
 
