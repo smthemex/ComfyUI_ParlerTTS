@@ -1,3 +1,6 @@
+# !/usr/bin/env python
+# -*- coding: UTF-8 -*-
+
 import torch
 from parler_tts import ParlerTTSForConditionalGeneration
 from transformers import AutoTokenizer
@@ -5,13 +8,69 @@ import soundfile as sf
 import os
 import random
 
-
-os.environ['TRANSFORMERS_OFFLINE'] = "1"
 device = "cuda:0" if torch.cuda.is_available() else "cpu"
 tts_path = os.path.dirname(os.path.abspath(__file__))
 
 
-class Parler_TTS_PromptToAudio:
+class ModelDownload:
+    def __init__(self):
+        pass
+
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "repo_id": ("STRING",
+                            {"default": "parler-tts/parler_tts_mini_v0.1"}),
+                "model_local_dir": ("STRING",
+                                    {"default": "./models/diffusers"}),
+                "max_workers": ("INT", {"default": 4, "min": 1, "max": 8, "step": 1, "display": "slider"}),
+                "local_dir_use_symlinks": ("BOOLEAN", {"default": True},),
+                "use_hf_mirror": ("BOOLEAN", {"default": True},)
+            }
+        }
+
+    RETURN_TYPES = ("STRING",)
+    RETURN_NAMES = ("model_path",)
+    FUNCTION = "model_download"
+    CATEGORY = "Parler_TTS"
+
+    def model_download(self, repo_id, model_local_dir, max_workers, local_dir_use_symlinks, use_hf_mirror):
+        if use_hf_mirror:
+            os.environ['HF_ENDPOINT'] = 'https://hf-mirror.com'
+
+            from huggingface_hub import snapshot_download
+
+            model_path = f"{model_local_dir}/{repo_id.split('/')[-1]}"  # 本地模型存储的地址
+
+            # 开始下载
+            snapshot_download(
+                repo_id=repo_id,
+                local_dir=model_path,
+                local_dir_use_symlinks=local_dir_use_symlinks,  # 为false时，以本地模型使用文件保存，而非blob形式保存，但是每次使用得重新下载。
+                max_workers=max_workers
+                # token=token,“在hugging face上生成的 自己的access token， 否则模型下载可能会中断”
+                # proxies = {"https": "http://localhost:7890"},  # 可选代理端口
+            )
+            return (model_path,)
+        else:
+            from huggingface_hub import snapshot_download
+
+            model_path = f"{model_local_dir}/{repo_id.split('/')[-1]}"  # 本地模型存储的地址
+
+            # 开始下载
+            snapshot_download(
+                repo_id=repo_id,
+                local_dir=model_path,
+                local_dir_use_symlinks=local_dir_use_symlinks,  # 为false时，以本地模型使用文件保存，而非blob形式保存，但是每次使用得重新下载。
+                max_workers=max_workers
+                # token=token,“在hugging face上生成的 自己的access token， 否则模型下载可能会中断”
+                # proxies = {"https": "http://localhost:7890"},  # 可选代理端口
+            )
+            return (model_path,)
+
+
+class PromptToAudio:
 
     def __init__(self):
         pass
@@ -20,181 +79,81 @@ class Parler_TTS_PromptToAudio:
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "prompt_in": ("STRING", {"default": "", "forceInput": True, }),
-                "description_in": ("STRING", {"default": "", "forceInput": True, }),
                 "model_path": ("STRING",
-                               {"default": "F:/test/ComfyUI/models/diffusers/parler-tts/parler_tts_mini_v0.1"}),
+                               {"default": "parler-tts/parler_tts_mini_v0.1"}),
                 "prompt": ("STRING", {"multiline": True, "default": "Hey, how are you doing today?"}),
                 "description": ("STRING", {"multiline": True,
                                            "default": "A female speaker with a slightly low-pitched voice "
                                                       "delivers her words quite expressively, in a very confined "
                                                       "sounding environment with clear audio quality. "
-                                                      "She speaks very fast."})
+                                                      "She speaks very fast."}),
+                "use_model_offline": ("BOOLEAN", {"default": True},)
             }
         }
 
-    RETURN_TYPES = ("STRING",)
-    RETURN_NAMES = ("text",)
-    FUNCTION = "parler_tts_normal"
-    CATEGORY = "ComfyUI_ParlerTTS"
+    RETURN_TYPES = ("STRING", "STRING")
+    RETURN_NAMES = ("audio_file", "audio_info")
+    FUNCTION = "prompt2audio"
+    CATEGORY = "Parler_TTS"
 
-    def parler_tts_normal(self, prompt_in, description_in, model_path, prompt, description):
-        prompt = "".join([prompt_in, prompt])
-        description = "".join([description_in, prompt])
-        model = ParlerTTSForConditionalGeneration.from_pretrained(model_path).to(device)
-        tokenizer = AutoTokenizer.from_pretrained(model_path)
-        input_ids = tokenizer(description, return_tensors="pt").input_ids.to(device)
-        prompt_input_ids = tokenizer(prompt, return_tensors="pt").input_ids.to(device)
-        generation = model.generate(input_ids=input_ids, prompt_input_ids=prompt_input_ids)
-        audio_arr = generation.cpu().numpy().squeeze()
-        file_name = "Audio" + ''.join(random.choice("0123456789") for _ in range(5)) + ".wav"
-        path = os.path.join(tts_path, "output", file_name)
-        output_path = os.path.normpath(path)
-        # print(output_path)
-        sf.write(output_path, audio_arr, model.config.sampling_rate)
-        # with sf.SoundFile(file_name, mode='r') as f:
-            # duration = f.frames / f.samplerate
-        # audio_len = f'The duration of the audio file is: {duration} seconds.'
-        # print(file_name)
-        prompt = f"Audio file path : {output_path}"
-        return (prompt,)
-
-
-NODE_CLASS_MAPPINGS = {
-    "Parler_TTS_PromptToAudio": Parler_TTS_PromptToAudio
-}
-
-NODE_DISPLAY_NAME_MAPPINGS = {
-    "PParler_TTS_PromptToAudio": "Parler_TTS_PromptToAudio"
-}
-
-
-'''
-class Parler_TTS_AudioToAudio:
-
-    def __init__(self):
-        pass
-
-    @classmethod
-    def INPUT_TYPES(cls):
-        return {
-            "required": {
-                "prompt_in": ("STRING", {"default": "", "forceInput": True, }),
-                "description_in": ("STRING", {"default": "", "forceInput": True, }),
-                "model_path": ("STRING",
-                               {"default": "F:/test/ComfyUI/models/diffusers/parler-tts/parler_tts_mini_v0.1"}),
-                "prompt": ("STRING", {"multiline": True, "default": "Hey, how are you doing today?"}),
-                "description": ("STRING", {"multiline": True,
-                                           "default": "A female speaker with a slightly low-pitched "
-                                                      "voice delivers her words quite expressively, "
-                                                      "in a very confined sounding environment with "
-                                                      "clear audio quality. "
-                                                      "She speaks very fast."})
-            }
-        }
-
-    RETURN_TYPES = ("VHS_AUDIO",)
-    RETURN_NAMES = ("audio",)
-    FUNCTION = "parler_tts_audio"
-    CATEGORY = "ComfyUI_ParlerTTS"
-    
-    
-    def ffmpeg_suitability(self, path):
-        try:
-            version = subprocess.run([path, "-version"], check=True,
-                                     capture_output=True).stdout.decode("utf-8")
-        except:
-            return 0
-        score = 0
-        # rough layout of the importance of various features
-        simple_criterion = [("libvpx", 20), ("264", 10), ("265", 3),
-                            ("svtav1", 5), ("libopus", 1)]
-        for criterion in simple_criterion:
-            if version.find(criterion[0]) >= 0:
-                score += criterion[1]
-        # obtain rough compile year from copyright information
-        copyright_index = version.find('2000-2')
-        if copyright_index >= 0:
-            copyright_year = version[copyright_index + 6:copyright_index + 9]
-            if copyright_year.isnumeric():
-                score += int(copyright_year)
-        return score
-
-    if "VHS_FORCE_FFMPEG_PATH" in os.environ:
-        ffmpeg_path = os.environ.get("VHS_FORCE_FFMPEG_PATH")
-    else:
-        ffmpeg_paths = []
-        try:
-            from imageio_ffmpeg import get_ffmpeg_exe
-            imageio_ffmpeg_path = get_ffmpeg_exe()
-            ffmpeg_paths.append(imageio_ffmpeg_path)
-        except:
-            if "VHS_USE_IMAGEIO_FFMPEG" in os.environ:
-                print("Failed to import imageio_ffmpeg")
-        if "VHS_USE_IMAGEIO_FFMPEG" in os.environ:
-            ffmpeg_path = imageio_ffmpeg_path
+    def prompt2audio(self, model_path, prompt, description, use_model_offline):
+        if not model_path:
+            raise ValueError("need a model_path")
         else:
-            system_ffmpeg = shutil.which("ffmpeg")
-            if system_ffmpeg is not None:
-                ffmpeg_paths.append(system_ffmpeg)
-            if os.path.isfile("ffmpeg"):
-                ffmpeg_paths.append(os.path.abspath("ffmpeg"))
-            if os.path.isfile("ffmpeg.exe"):
-                ffmpeg_paths.append(os.path.abspath("ffmpeg.exe"))
-            if len(ffmpeg_paths) == 0:
-                print("No valid ffmpeg found.")
-                ffmpeg_path = None
-            elif len(ffmpeg_paths) == 1:
-                # Evaluation of suitability isn't required, can take sole option
-                # to reduce startup time
-                ffmpeg_path = ffmpeg_paths[0]
+            if use_model_offline:
+                try:
+                    os.environ['TRANSFORMERS_OFFLINE'] = "1"
+
+                    model = ParlerTTSForConditionalGeneration.from_pretrained(model_path).to(device)
+                    tokenizer = AutoTokenizer.from_pretrained(model_path)
+                    input_ids = tokenizer(description, return_tensors="pt").input_ids.to(device)
+                    prompt_input_ids = tokenizer(prompt, return_tensors="pt").input_ids.to(device)
+                    generation = model.generate(input_ids=input_ids, prompt_input_ids=prompt_input_ids)
+                    audio_arr = generation.cpu().numpy().squeeze()
+
+                    file_name = "Audio" + ''.join(random.choice("0123456789") for _ in range(5)) + ".wav"
+                    path = os.path.join(tts_path, "output", file_name)
+                    output_path = os.path.normpath(path)
+                    sf.write(output_path, audio_arr, model.config.sampling_rate)
+
+                    with sf.SoundFile(output_path, mode='r') as f:
+                        duration = f.frames / f.samplerate
+                        audio_len = f'The duration of the audio file is: {duration} seconds.'
+                        audio_file = output_path
+                        audio_info = f"{output_path} \n {audio_len} \n {prompt}"
+                    return audio_file, audio_info
+                except Exception as e:
+                    e = ("Notice:When using use_model_offline, the model path must be the path of existing "
+                         "pre downloaded models.使用use_model_offline时，注意：模型路径必须是已有预下载模型的路径")
+                    print(e)
             else:
-                ffmpeg_path = max(ffmpeg_paths, key=ffmpeg_suitability)
+                model = ParlerTTSForConditionalGeneration.from_pretrained(model_path).to(device)
+                tokenizer = AutoTokenizer.from_pretrained(model_path)
+                input_ids = tokenizer(description, return_tensors="pt").input_ids.to(device)
+                prompt_input_ids = tokenizer(prompt, return_tensors="pt").input_ids.to(device)
+                generation = model.generate(input_ids=input_ids, prompt_input_ids=prompt_input_ids)
+                audio_arr = generation.cpu().numpy().squeeze()
 
-    def parler_tts_audio(self, prompt_in, description_in, model_path, prompt, description):
-        prompt = "".join([prompt_in, prompt])
-        description = "".join([description_in, prompt])
-        model = ParlerTTSForConditionalGeneration.from_pretrained(model_path).to(device)
-        tokenizer = AutoTokenizer.from_pretrained(model_path)
-        input_ids = tokenizer(description, return_tensors="pt").input_ids.to(device)
-        prompt_input_ids = tokenizer(prompt, return_tensors="pt").input_ids.to(device)
-        generation = model.generate(input_ids=input_ids, prompt_input_ids=prompt_input_ids)
-        audio_arr = generation.cpu().numpy().squeeze()
-        file_name = "Audio" + ''.join(random.choice("abcdefghijklmnopqrstuvwxyz") for _ in range(5))
-        file_name = current_path + f"{file_name}.wav"
-        sf.write(file_name, audio_arr, model.config.sampling_rate)
-        return (file_name,)
+                file_name = "Audio" + ''.join(random.choice("0123456789") for _ in range(5)) + ".wav"
+                path = os.path.join(tts_path, "output", file_name)
+                output_path = os.path.normpath(path)
+                sf.write(output_path, audio_arr, model.config.sampling_rate)
 
-    def get_audio(self, file_name, start_time=0, duration=0):
-        args = [ffmpeg_path, "-v", "error", "-i", file_name]
-        if start_time > 0:
-            args += ["-ss", str(start_time)]
-        if duration > 0:
-            args += ["-t", str(duration)]
-        try:
-            res = subprocess.run(args + ["-f", "wav", "-"],
-                                 stdout=subprocess.PIPE, check=True).stdout
-        except Exception as e:
-            raise Exception(f"Failed to extract audio from: {file_name}")
-        return res
-
-    def load_audio(self, audio_file, seek_seconds):
-        if audio_file is None or validate_path(audio_file) != True:
-            raise Exception("audio_file is not a valid path: " + audio_file)
-        # Eagerly fetch the audio since the user must be using it if the
-        # node executes, unlike Load Video
-        audio = get_audio(audio_file, start_time=seek_seconds)
-        return (lambda: audio,)
+                with sf.SoundFile(output_path, mode='r') as f:
+                    duration = f.frames / f.samplerate
+                    audio_len = f'The duration of the audio file is: {duration} seconds.'
+                    audio_file = output_path
+                    audio_info = f"{output_path} \n {audio_len} \n {prompt}"
+                return audio_file, audio_info
 
 
 NODE_CLASS_MAPPINGS = {
-    "Parler_TTS_PromptToAudio": Parler_TTS_PromptToAudio,
-    "Parler_TTS_AudioToAudio": Parler_TTS_AudioToAudio
+    "ModelDownload": ModelDownload,
+    "PromptToAudio": PromptToAudio
+
 }
 
 NODE_DISPLAY_NAME_MAPPINGS = {
-    "PParler_TTS_PromptToAudio": "Parler_TTS_PromptToAudio",
-    "Parler_TTS_AudioToAudio": "Parler_TTS_AudioToAudio"
+    "ModelDownload": "ModelDownload",
+    "PromptToAudio": "PromptToAudio"
 }
-
-'''
