@@ -8,7 +8,6 @@ import soundfile as sf
 import os
 import random
 
-device = "cuda:0" if torch.cuda.is_available() else "cpu"
 tts_path = os.path.dirname(os.path.abspath(__file__))
 
 
@@ -100,6 +99,7 @@ class PromptToAudio:
             raise ValueError("need a model_path")
         else:
             self.get_model(get_model_online)
+            device = "cuda:0" if torch.cuda.is_available() else "cpu"
             try:
                 model = ParlerTTSForConditionalGeneration.from_pretrained(model_path).to(device)
                 tokenizer = AutoTokenizer.from_pretrained(model_path)
