@@ -26,7 +26,7 @@ class ModelDownload:
                                     {"default": "./models/diffusers"}),
                 "max_workers": ("INT", {"default": 4, "min": 1, "max": 8, "step": 1, "display": "slider"}),
                 "local_dir_use_symlinks": ("BOOLEAN", {"default": True},),
-                "use_hf_mirror": ("BOOLEAN", {"default": False},)
+                "use_hf_mirror": ("BOOLEAN", {"default": True},)
             }
         }
 
@@ -37,9 +37,9 @@ class ModelDownload:
 
     def hf_mirror(self, use_hf_mirror):
         if use_hf_mirror:
-            os.environ['HF_ENDPOINT'] = 'https://huggingface.co'
-        else:
             os.environ['HF_ENDPOINT'] = 'https://hf-mirror.com'
+        else:
+            os.environ['HF_ENDPOINT'] = 'https://huggingface.co'
         return os.environ['HF_ENDPOINT']
 
 
