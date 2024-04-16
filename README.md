@@ -25,25 +25,28 @@ Example:
   pip install git+https://github.com/huggingface/parler-tts.git
   ```
 
-  1.3 Download the model using a browser  
+  1.3 Download the model and use it
   
-  `Method 1`  
+  Model download method 1: Use model_path(repo_id) download directly   
+  ----
+  
+  ![](https://github.com/smthemex/ComfyUI_ParlerTTS/blob/main/output/example1.png)
     
-  Download all the files in the [link](https://huggingface.co/parler-tts/parler_tts_mini_v0.1/tree/main) and store them in a folder that you have customized. model_offline should be switch to True.
+  Model download method 2：如果无法直连huggingface  
+  ---
   
-  `Method 2` 
-  
-  Fill in repo_id: parler tts/parler_tts_mini_v0.1 in the path, switch the model_offline switch to false, and you can directly download the model link using huggingface. If you are a user in Chinese Mainland, you can use the downloadmodel node to download the model  
-  
-  在路径填写repo_id：parler-tts/parler_tts_mini_v0.1，将model_offline开关切换至false，就能使用huggingface直接下载模型链接。如果你是中国大陆用户，可使用downloadmodel 节点下载模型。  
-  
-  1.4 Mode path  
-  
- `Notice: Please refer to the usage method of "/" in the default node path for the path format of Windows`  
+ 方法a,直接浏览器下载模型：   
+    
+ 下载[link](https://huggingface.co/parler-tts/parler_tts_mini_v0.1/tree/main)所有文件到一个你喜欢的的路径，路径名不要有中文，路径所有“\”要换成“/”，在model_path填写你的路径，例如 X:/XX/XXX,关闭get_model_online,即可使用。  
+
+ 方法B,使用内置的模型下载节点：（比如你懒得去浏览器下载）  
+
+ 把主节点的model_path转为输入，然后链接模型下载节点，模型默认下载至comfyUI的diffuse目录下（你也可以改成任何你喜欢的），其他参数不要动，注意hf_mirror是开启的，不然下载速度会很慢或者直接下载不了。 等下载完成即可使用，下次再用也不用再使用节点，直接用默认的主节点即可。  
 
 2.Example   
 -------
-![](https://github.com/smthemex/ComfyUI_ParlerTTS/blob/main/output/example.png)
+![](https://github.com/smthemex/ComfyUI_ParlerTTS/blob/main/output/example.png)  
+![](https://github.com/smthemex/ComfyUI_ParlerTTS/blob/main/output/example1.png)  
 
 Citation
 ------
