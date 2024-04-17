@@ -120,8 +120,6 @@ class PromptToAudio:
                     audio_info = f"{output_path}\n{audio_len}\n{prompt}"
                 return audio_file, audio_info
             except Exception as e:
-                e = ("Notice: When using \'use_model_offline\', the model path must be the path of existing "
-                     "pre downloaded models.\n 注意： 使用\'use_model_offline\'模式时，模型路径必须是已有预下载模型的路径")
                 print(e)
 
 
