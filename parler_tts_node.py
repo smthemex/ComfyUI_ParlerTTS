@@ -87,18 +87,12 @@ class PromptToAudio:
     FUNCTION = "prompt2audio"
     CATEGORY = "Parler_TTS"
 
-    def get_model(self, get_model_online):
-        if get_model_online:
-            os.environ['TRANSFORMERS_OFFLINE'] = "0"
-        else:
-            os.environ['TRANSFORMERS_OFFLINE'] = "1"
-        return os.environ['TRANSFORMERS_OFFLINE']
-
     def prompt2audio(self, model_path, prompt, description, get_model_online):
         if not model_path:
             raise ValueError("need a model_path")
         else:
-            self.get_model(get_model_online)
+            if not get_model_online:
+                os.environ['TRANSFORMERS_OFFLINE'] = "1"
             device = "cuda:0" if torch.cuda.is_available() else "cpu"
             try:
                 model = ParlerTTSForConditionalGeneration.from_pretrained(model_path).to(device)
@@ -108,7 +102,7 @@ class PromptToAudio:
                 generation = model.generate(input_ids=input_ids, prompt_input_ids=prompt_input_ids)
                 audio_arr = generation.cpu().numpy().squeeze()
 
-                file_name = "Audio" + ''.join(random.choice("0123456789") for _ in range(5)) + ".wav"
+                file_name = "Audio_" + ''.join(random.choice("0123456789") for _ in range(5)) + ".wav"
                 path = os.path.join(tts_path, "output", file_name)
                 output_path = os.path.normpath(path)
                 sf.write(output_path, audio_arr, model.config.sampling_rate)
