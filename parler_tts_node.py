@@ -2,7 +2,7 @@
 # -*- coding: UTF-8 -*-
 
 import torch
-from parler_tts import ParlerTTSForConditionalGeneration
+from .parler_tts import ParlerTTSForConditionalGeneration
 from transformers import AutoTokenizer
 import soundfile as sf
 import os
