@@ -50,9 +50,9 @@ If the comfyUI method you installed is git clone, That is not a portable comfyui
  ```
 method B  
 -----
-如果你安装的comfyui是整合包,你需要在comfyui的python_embeded的目录下,执行如下代码安装依赖库  
+如果你安装的comfyui是整合包,你需要在comfyui的python_embeded的目录下,执行如下代码安装依赖库 ,安装库文件,注意替换X为你的实际路径：  
 
-if the comfyui you are installing is a portable comfyui, you need to execute the following code in the python_embed directory of comfyui to install the dependency library   
+if the comfyui you are installing is a portable comfyui, you need to execute the following code in the python_embed directory of comfyui to install the dependency library,please replace X with your actual path:   
 
 ``` python 
 pip install -r requirements.txt --target="path like X:\ComfyUI_windows\python_embeded\Lib\site-packages"
