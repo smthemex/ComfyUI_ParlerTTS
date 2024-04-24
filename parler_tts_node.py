@@ -9,56 +9,8 @@ import os
 import random
 
 tts_path = os.path.dirname(os.path.abspath(__file__))
-
-
-class ModelDownload:
-    def __init__(self):
-        pass
-
-    @classmethod
-    def INPUT_TYPES(cls):
-        return {
-            "required": {
-                "repo_id": ("STRING",
-                            {"default": "parler-tts/parler_tts_mini_v0.1"}),
-                "model_local_dir": ("STRING",
-                                    {"default": "./models/diffusers"}),
-                "max_workers": ("INT", {"default": 4, "min": 1, "max": 8, "step": 1, "display": "slider"}),
-                "local_dir_use_symlinks": ("BOOLEAN", {"default": True},),
-                "use_hf_mirror": ("BOOLEAN", {"default": True},)
-            }
-        }
-
-    RETURN_TYPES = ("STRING",)
-    RETURN_NAMES = ("model_path",)
-    FUNCTION = "model_download"
-    CATEGORY = "Parler_TTS"
-
-    def hf_mirror(self, use_hf_mirror):
-        if use_hf_mirror:
-            os.environ['HF_ENDPOINT'] = 'https://hf-mirror.com'
-        else:
-            os.environ['HF_ENDPOINT'] = 'https://huggingface.co'
-        return os.environ['HF_ENDPOINT']
-
-
-    def model_download(self, repo_id, model_local_dir, max_workers, local_dir_use_symlinks, use_hf_mirror):
-
-        self.hf_mirror(use_hf_mirror)
-        from huggingface_hub import snapshot_download
-
-        model_path = f"{model_local_dir}/{repo_id.split('/')[-1]}"  # 本地模型存储的地址
-
-        # 开始下载
-        snapshot_download(
-            repo_id=repo_id,
-            local_dir=model_path,
-            local_dir_use_symlinks=local_dir_use_symlinks,  # 为false时，以本地模型使用文件保存，而非blob形式保存，但是每次使用得重新下载。
-            max_workers=max_workers
-            # token=token,“在hugging face上生成的 自己的access token， 否则模型下载可能会中断”
-            # proxies = {"https": "http://localhost:7890"},  # 可选代理端口
-        )
-        return (model_path,)
+path_dir = os.path.dirname(tts_path)
+file_path = os.path.dirname(path_dir)
 
 
 class PromptToAudio:
@@ -89,7 +41,7 @@ class PromptToAudio:
 
     def prompt2audio(self, model_path, prompt, description, get_model_online):
         if not model_path:
-            raise ValueError("need a model_path")
+            raise ValueError("need a model_path or repo_id")
         else:
             if not get_model_online:
                 os.environ['TRANSFORMERS_OFFLINE'] = "1"
@@ -103,7 +55,7 @@ class PromptToAudio:
                 audio_arr = generation.cpu().numpy().squeeze()
 
                 file_name = "Audio_" + ''.join(random.choice("0123456789") for _ in range(5)) + ".wav"
-                path = os.path.join(tts_path, "output", file_name)
+                path = os.path.join(file_path, "output", file_name)
                 output_path = os.path.normpath(path)
                 sf.write(output_path, audio_arr, model.config.sampling_rate)
 
@@ -118,12 +70,10 @@ class PromptToAudio:
 
 
 NODE_CLASS_MAPPINGS = {
-    "ModelDownload": ModelDownload,
     "PromptToAudio": PromptToAudio
 
 }
 
 NODE_DISPLAY_NAME_MAPPINGS = {
-    "ModelDownload": "ModelDownload",
     "PromptToAudio": "PromptToAudio"
 }
