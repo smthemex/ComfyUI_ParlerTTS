@@ -4,7 +4,7 @@ from transformers import PreTrainedModel
 from transformers.models.encodec.modeling_encodec import EncodecEncoderOutput, EncodecDecoderOutput
 from .configuration_dac import DACConfig
 
-from dac.model import DAC
+from ...dac.model import DAC
 
 
 # model doesn't support batching yet
