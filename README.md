@@ -1,6 +1,12 @@
 # ComfyUI_ParlerTTS
 This is a simple ComfyUI custom TTS node based on Parler_tts. Now you can using TTS audio for “ComfyUI-VideoHelperSuite node”   
 
+update:
+-----
+New model: parler-tts/parler-tts-mini-jenny-30H   
+如果你把模型保存在diffusers目录，则可以删掉repo_id的内容，然后用菜单选择模型.   
+If you save the model in the diffusers directory, you can delete the content of repo_id and then select the model from the menu   
+
 1.Notice：
 ------
 You can find the project for Parler-TTS here: [Parler-TTS](https://github.com/huggingface/parler-tts)  It is known that there may be library file conflicts, causing some ComfyUI node to be unusabl To prevent the dependency of this plugin from affecting other comfyui plugins, I suggest the version of the "protobuf" library=3.20.3 because other versions will affect the "tensorflow-intel" library.  
@@ -49,15 +55,21 @@ The requirements text is not currently listed. I provide the following method to
  Possible steps: pip install torch (assuming you are currently using a higher version of torch), if the protobuf library reports an error, install version=3.20.3   
 
 
-2.4 Download the model and use it    
-Model download method 1:   
-keep “get_model_onlin”  is Ture  ，Use repo_id download form huggingface directly   
+2.4 Download the model and use it
 
-模型下载方法 2：(如果无法直连huggingface )   
-方法a,浏览器下载[link](https://huggingface.co/parler-tts/parler_tts_mini_v0.1/tree/main)所有文件到一个你喜欢的的路径，路径名不要有中文，路径所有“\”要换成“/”，在model_path填写你的路径，例如 X:/XX/XXX,关闭get_model_online,即可使用。 
-方法B,使用我另一个模型下载节点：（比如你不会去浏览器下载）  
-把主节点的model_path转为输入，然后链接模型下载节点，模型默认下载至comfyUI的diffuse目录下（你也可以改成任何你喜欢的），其他参数不要动， 等下载完成即可使用,根据自己的需求看是不是用symlinks.   
- 
+Methon 1    
+Use the default repo_id or fill in "parler-tts/parler-tts-mini-jenny-30H"   
+使用默认的repo_id 或者填写parler-tts/parler-tts-mini-jenny-30H
+
+Methon 2  
+用我另一个pipeline工具下载完整模型文件到默认的diffusers目录下，就可以使用菜单来选择模型（使用时需要删掉repo_id的内容） 
+Use my other pipeline tool to download the complete model file to the default diffusers directory, and then use the menu to select the model (you need to delete the content of repo_id when using it)   
+
+Methon 3   
+在repo_id中填写你已下载模型的绝对路径，例如XX:/XXX/parler-tts/parler-tts-mini-jenny-30H ，记住要用"/"   
+Fill in the absolute path of the model you have downloaded in repo_id, for example XX:/XXX/parallel tts/parallel tts mini jenny 30H, remember to use "/"  
+
+
 3.Example   
 -------
 ![](https://github.com/smthemex/ComfyUI_ParlerTTS/blob/main/example.png)  
