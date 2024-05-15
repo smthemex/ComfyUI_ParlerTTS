@@ -3,7 +3,9 @@ This is a simple ComfyUI custom TTS node based on Parler_tts. Now you can using 
 
 update:
 -----
-New model: parler-tts/parler-tts-mini-jenny-30H   
+新模型parler-tts/parler-tts-mini-jenny-30H，在描述语中，需要添加关键词Jenny   
+New model: parler-tts/parler-tts-mini-jenny-30H    this model must using keyword “Jenny” in the voice description:
+
 如果你把模型保存在diffusers目录，则可以删掉repo_id的内容，然后用菜单选择模型.   
 If you save the model in the diffusers directory, you can delete the content of repo_id and then select the model from the menu   
 
