@@ -1,0 +1,14 @@
+[project]
+name = "comfyui_parlertts"
+description = "You can call the ParlerTTS tool in comfyUI, which currently only supports English."
+version = "1.0.0"
+license = "LICENSE"
+
+[project.urls]
+Repository = "https://github.com/smthemex/ComfyUI_ParlerTTS"
+#  Used by Comfy Registry https://comfyregistry.org
+
+[tool.comfy]
+PublisherId = ""
+DisplayName = "ComfyUI_ParlerTTS"
+Icon = ""
