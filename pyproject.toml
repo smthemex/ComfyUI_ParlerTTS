@@ -1,0 +1,14 @@
+[project]
+name = "comfyui_parlertts"
+description = "you can using parlertts in comfyUI "
+version = "1.0.0"
+license = "LICENSE"
+
+[project.urls]
+Repository = "https://github.com/smthemex/ComfyUI_ParlerTTS"
+#  Used by Comfy Registry https://comfyregistry.org
+
+[tool.comfy]
+PublisherId = "smthemx"
+DisplayName = "ComfyUI_ParlerTTS"
+Icon = ""
