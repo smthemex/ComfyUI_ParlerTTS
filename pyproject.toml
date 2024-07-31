@@ -2,7 +2,7 @@
 name = "comfyui_parlertts"
 description = "you can using parlertts in comfyUI "
 version = "1.0.0"
-license = "LICENSE"
+license = { file = "LICENSE" }
 
 [project.urls]
 Repository = "https://github.com/smthemex/ComfyUI_ParlerTTS"
