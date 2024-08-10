@@ -1,85 +1,99 @@
 # ComfyUI_ParlerTTS
-This is a simple ComfyUI custom TTS node based on Parler_tts. Now you can using TTS audio for “ComfyUI-VideoHelperSuite node”   
+Parler-TTS is a lightweight text-to-speech (TTS) model that can generate high-quality, natural sounding speech in the style of a given speaker (gender, pitch, speaking style, etc).
+This is a simple ComfyUI custom node based on Parler_tts. 
 
-update:
+You can find the project for Parler-TTS here: [Parler-TTS](https://github.com/huggingface/parler-tts) 
+--
+
+Update:
 -----
+2024/08/10    
+--迭代至官方08/08的v2版代码,支持2个新模型,修复BUG,现在输出只能用comfyUI内置的audio接口;  
+--add v2 code（from Parler-TTS 08/08）   
+-- two new Parler-TTS checkpoints [parler-tts-mini-v1](https://huggingface.co/parler-tts/parler-tts-mini-v1/tree/main)   and [parler-tts-large-v1](https://huggingface.co/parler-tts/parler-tts-large-v1/tree/main)      
+--fix bug and support comfyUI audio save and view...  
+
+--Previous updates   
 新模型parler-tts/parler-tts-mini-jenny-30H，在描述语中，需要添加关键词Jenny   
 New model: parler-tts/parler-tts-mini-jenny-30H    this model must using keyword “Jenny” in the voice description:
 
-如果你把模型保存在diffusers目录，则可以删掉repo_id的内容，然后用菜单选择模型.   
-If you save the model in the diffusers directory, you can delete the content of repo_id and then select the model from the menu   
-
-1.Notice：
-------
-You can find the project for Parler-TTS here: [Parler-TTS](https://github.com/huggingface/parler-tts)  It is known that there may be library file conflicts, causing some ComfyUI node to be unusabl To prevent the dependency of this plugin from affecting other comfyui plugins, I suggest the version of the "protobuf" library=3.20.3 because other versions will affect the "tensorflow-intel" library.  
-
-已知会有库文件冲突，导致某些ComfyUI 插件无法使用，为了防止此插件的依赖影响其他comfyui插件，我建议“ protobuf”库的版本==3.20.3 因为其他版本会影响“tensorflow-intel”库   
-    
-2.Installation
+1.Installation
 -----
-2.1 In the .\ComfyUI \ custom_node directory, run the following:  
+ In the .\ComfyUI \ custom_node directory, run the following:  
 
-  ``` python 
+``` 
   git clone https://github.com/smthemex/ComfyUI_ParlerTTS.git
-  ```
-2.2 install dependencies
-
-安装前的注意事项   
-这个插件的核心库是“descript-audiotools”，其 torch需求依赖较低，如果安装此方法的安装依赖，则会导致 类似torch==2.2.2+cu121的高版本torch被卸载，所以，如果你要使用 例如torch==2.2.2+cu121的高版本torch，则需要使用pip重新安装一次torch==2.2.2+cu121   
-
-Precautions before installation:  
-The core library of this node is "descript-audiotools", and its torch dependency is relatively low. If you install the installation dependency of this method, it will cause a higher version torch like torch=2.2.2+cu121 to be uninstalled. Therefore, if you want to use a higher version torch like torch=2.2.2+cu121, you need to use pip to reinstall torch=2.2.2+cu121 once  
-
-2.3 特殊安装情况
-以下都不是最终的需求库安装解决方法 (The following are not the final solution for installing the requirement library:)      
-
-method A:   
-如果你安装的comfyUI方式是,git clone ...,也就是不是整合包,你可以使用   
-If the comfyUI method you installed is git clone, That is not a portable comfyui, you can use it   
-
- ``` python 
- pip install git+https://github.com/huggingface/parler-tts.git
- ```
-method B:  
-如果你安装的comfyui是整合包,你需要在comfyui的python_embeded的目录下,执行如下代码安装依赖库 ,安装库文件,注意替换X为你的实际路径：  
-if the comfyui you are installing is a portable comfyui, you need to execute the following code in the python_embed directory of comfyui to install the dependency library,please replace X with your actual path:   
-
-``` python 
-pip install -r requirements.txt --target="path like X:\ComfyUI_windows\python_embeded\Lib\site-packages"
 ```
-requirements文字暂时未列出，我提供以下方法，安装库文件,注意替换X为你的实际路径：  
-The requirements text is not currently listed. I provide the following method to install the library file, please replace X with your actual path:  
 
- ``` python 
- pip install descript-audiotools  --target="X:\ComfyUI_windows\python_embeded\Lib\site-packages"
- ```
- 可能的步骤: pip install torch (假设你现在正在使用的是高版本的torch) ,如果protobuf库报错,安装版本==3.20.3  
- Possible steps: pip install torch (assuming you are currently using a higher version of torch), if the protobuf library reports an error, install version=3.20.3   
+2 Dependencies
+---
+need  "  transformers>=4.43.0  "!!!!
 
+```
+python  pip install requirements.txt
 
-2.4 Download the model and use it
+```
+如果是便携包,需要在python_embeded执行以下代码:
 
-Methon 1    
-Use the default repo_id or fill in "parler-tts/parler-tts-mini-jenny-30H"   
-使用默认的repo_id 或者填写parler-tts/parler-tts-mini-jenny-30H
+```
+python -m pip install requirements.txt
+```
+如果安装transformers高版本无法进入comfyUI，多半是hub报错, 在python_embeded，打开CMD中执行:   
+第一步，先卸载  ：  
+```
+python -m pip uninstall huggingface_hub
 
-Methon 2  
-用我另一个pipeline工具下载完整模型文件到默认的diffusers目录下，就可以使用菜单来选择模型（使用时需要删掉repo_id的内容） 
-Use my other pipeline tool to download the complete model file to the default diffusers directory, and then use the menu to select the model (you need to delete the content of repo_id when using it)   
+```
+第二步，在python_embeded/Lib/site-packages文件中删除huggingface开头的所有文件夹：  
+第三步， 在python_embeded中，打开CMD中执行   
+```
+python -m pip install huggingface_hub
 
-Methon 3   
-在repo_id中填写你已下载模型的绝对路径，例如XX:/XXX/parler-tts/parler-tts-mini-jenny-30H ，记住要用"/"   
-Fill in the absolute path of the model you have downloaded in repo_id, for example XX:/XXX/parallel tts/parallel tts mini jenny 30H, remember to use "/"  
+```
 
+3 Checkpoints
+---
+3.1 using  huggingface_hub    
+Use the default repo_id or fill in "parler-tts/parler-tts-mini-jenny-30H"  ,"parler-tts/parler-tts-mini-v1 ","parler-tts/parler-tts-large-v1"....   
+使用默认的repo_id 或者填写"parler-tts/parler-tts-mini-jenny-30H",这类地址，去掉引号；   
 
-3.Example   
+3.2 offline  
+在repo_id填写绝对地址，Fill in the absolute address in the repo id ：     
+X:/XXX/XXX/parler-tts/parler-tts-mini-jenny-30H
+
+4.Example   
 -------
 ![](https://github.com/smthemex/ComfyUI_ParlerTTS/blob/main/example.png)  
 
-4.Citation
+5 My ComfyUI node list：
+-----
+
+1、ParlerTTS node:[ComfyUI_ParlerTTS](https://github.com/smthemex/ComfyUI_ParlerTTS)     
+2、Llama3_8B node:[ComfyUI_Llama3_8B](https://github.com/smthemex/ComfyUI_Llama3_8B)      
+3、HiDiffusion node：[ComfyUI_HiDiffusion_Pro](https://github.com/smthemex/ComfyUI_HiDiffusion_Pro)   
+4、ID_Animator node： [ComfyUI_ID_Animator](https://github.com/smthemex/ComfyUI_ID_Animator)       
+5、StoryDiffusion node：[ComfyUI_StoryDiffusion](https://github.com/smthemex/ComfyUI_StoryDiffusion)  
+6、Pops node：[ComfyUI_Pops](https://github.com/smthemex/ComfyUI_Pops)   
+7、stable-audio-open-1.0 node ：[ComfyUI_StableAudio_Open](https://github.com/smthemex/ComfyUI_StableAudio_Open)        
+8、GLM4 node：[ComfyUI_ChatGLM_API](https://github.com/smthemex/ComfyUI_ChatGLM_API)   
+9、CustomNet node：[ComfyUI_CustomNet](https://github.com/smthemex/ComfyUI_CustomNet)           
+10、Pipeline_Tool node :[ComfyUI_Pipeline_Tool](https://github.com/smthemex/ComfyUI_Pipeline_Tool)    
+11、Pic2Story node :[ComfyUI_Pic2Story](https://github.com/smthemex/ComfyUI_Pic2Story)   
+12、PBR_Maker node:[ComfyUI_PBR_Maker](https://github.com/smthemex/ComfyUI_PBR_Maker)      
+13、ComfyUI_Streamv2v_Plus node:[ComfyUI_Streamv2v_Plus](https://github.com/smthemex/ComfyUI_Streamv2v_Plus)   
+14、ComfyUI_MS_Diffusion node:[ComfyUI_MS_Diffusion](https://github.com/smthemex/ComfyUI_MS_Diffusion)   
+15、ComfyUI_AnyDoor node: [ComfyUI_AnyDoor](https://github.com/smthemex/ComfyUI_AnyDoor)  
+16、ComfyUI_Stable_Makeup node: [ComfyUI_Stable_Makeup](https://github.com/smthemex/ComfyUI_Stable_Makeup)  
+17、ComfyUI_EchoMimic node:  [ComfyUI_EchoMimic](https://github.com/smthemex/ComfyUI_EchoMimic)   
+18、ComfyUI_FollowYourEmoji node: [ComfyUI_FollowYourEmoji](https://github.com/smthemex/ComfyUI_FollowYourEmoji)   
+19、ComfyUI_Diffree node: [ComfyUI_Diffree](https://github.com/smthemex/ComfyUI_Diffree)    
+20、ComfyUI_FoleyCrafter node: [ComfyUI_FoleyCrafter](https://github.com/smthemex/ComfyUI_FoleyCrafter)
+
+
+6.Citation
 ------
 If you found this repository useful, please consider citing this work and also the original Stability AI paper:  
-``` python  
+```   
 @misc{lacombe-etal-2024-parler-tts,
   author = {Yoach Lacombe and Vaibhav Srivastav and Sanchit Gandhi},
   title = {Parler-TTS},
@@ -90,7 +104,7 @@ If you found this repository useful, please consider citing this work and also t
 }
 ```
 
-``` python  
+```   
 @misc{lyth2024natural,
       title={Natural language guidance of high-fidelity text-to-speech with synthetic annotations},
       author={Dan Lyth and Simon King},
