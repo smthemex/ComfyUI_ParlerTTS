@@ -1,0 +1,7 @@
+transformers>=4.43.0
+#torch
+#sentencepiece
+#descript-audio-codec
+#black~=23.1
+#isort>=5.5.4
+#ruff>=0.0.241,<=0.0.259
