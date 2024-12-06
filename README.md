@@ -7,8 +7,8 @@ You can find the project for Parler-TTS here: [Parler-TTS](https://github.com/hu
 Update:
 -----
 **2024/12/06**  
-*  同步A的最新代码，适配更高版本的transformers;
-*  Synchronize the latest code of A and adapt to higher versions of transformers
+*  同步A new version of ParlerTTS的最新代码，适配更高版本的transformers;
+*  Synchronize the latest code of a new version of ParlerTTS and adapt to higher versions of transformers
 
 
 **Previous updates**     
