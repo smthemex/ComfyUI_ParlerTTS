@@ -1,5 +1,5 @@
-transformers>=4.43.0
-#torch
+transformers
+torch
 #sentencepiece
 #descript-audio-codec
 #black~=23.1
