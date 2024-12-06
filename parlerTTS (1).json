@@ -1,0 +1,151 @@
+{
+  "last_node_id": 27,
+  "last_link_id": 42,
+  "nodes": [
+    {
+      "id": 26,
+      "type": "ParlerTTS_LoadModel",
+      "pos": [
+        11890.095703125,
+        1292.8907470703125
+      ],
+      "size": [
+        315,
+        58
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "model",
+          "type": "PTTSMODEL",
+          "links": [
+            41
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ParlerTTS_LoadModel"
+      },
+      "widgets_values": [
+        "F:/test/ComfyUI/models/diffusers/parler-tts/parler-tts-mini-jenny-30H"
+      ]
+    },
+    {
+      "id": 27,
+      "type": "ParlerTTS_Sampler",
+      "pos": [
+        12250.1982421875,
+        1290.1907958984375
+      ],
+      "size": [
+        400,
+        200
+      ],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "PTTSMODEL",
+          "link": 41
+        }
+      ],
+      "outputs": [
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "links": [
+            42
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ParlerTTS_Sampler"
+      },
+      "widgets_values": [
+        "Parler-TTS is a lightweight text-to-speech (TTS) model that can generate high-quality, natural sounding speech in the style of a given speaker (gender, pitch, speaking style, etc)",
+        "A female speaker with a slightly low-pitched voice delivers her words quite expressively, in a very confined sounding environment with clear audio quality. She speaks very fast."
+      ]
+    },
+    {
+      "id": 25,
+      "type": "SaveAudio",
+      "pos": [
+        12674.5869140625,
+        1308.7044677734375
+      ],
+      "size": [
+        336.9787292480469,
+        126.04888153076172
+      ],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "link": 42
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "Node name for S&R": "SaveAudio"
+      },
+      "widgets_values": [
+        "audio/ComfyUI",
+        null
+      ]
+    }
+  ],
+  "links": [
+    [
+      41,
+      26,
+      0,
+      27,
+      0,
+      "PTTSMODEL"
+    ],
+    [
+      42,
+      27,
+      0,
+      25,
+      0,
+      "AUDIO"
+    ]
+  ],
+  "groups": [
+    {
+      "id": 4,
+      "title": "Group",
+      "bounding": [
+        11865.7177734375,
+        1076.945068359375,
+        1171.4639892578125,
+        539.3915405273438
+      ],
+      "color": "#3f789e",
+      "font_size": 24,
+      "flags": {}
+    }
+  ],
+  "config": {},
+  "extra": {
+    "ds": {
+      "scale": 0.6303940863128976,
+      "offset": [
+        -11364.37861195162,
+        -608.1818559189968
+      ]
+    }
+  },
+  "version": 0.4
+}
