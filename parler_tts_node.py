@@ -2,14 +2,9 @@
 # -*- coding: UTF-8 -*-
 
 import torch
-import torchaudio
 from huggingface_hub import snapshot_download
 from .parler_tts import ParlerTTSForConditionalGeneration
 from transformers import AutoTokenizer
-import soundfile as sf
-import os
-import random
-import folder_paths
 device = "cuda:0" if torch.cuda.is_available() else "cpu"
 
 class ParlerTTS_LoadModel:
@@ -24,8 +19,8 @@ class ParlerTTS_LoadModel:
             }
         }
 
-    RETURN_TYPES = ("MODEL","MODEL",)
-    RETURN_NAMES = ("model","tokenizer",)
+    RETURN_TYPES = ("PTTSMODEL",)
+    RETURN_NAMES = ("model",)
     FUNCTION = "main_loader"
     CATEGORY = "Parler_TTS"
 
@@ -34,10 +29,10 @@ class ParlerTTS_LoadModel:
             print("no repo,download default model'parler-tts/parler_tts_mini_v0.1' ")
             repo_id = snapshot_download("parler-tts/parler_tts_mini_v0.1")
         
-        model = ParlerTTSForConditionalGeneration.from_pretrained(repo_id).to(device)
+        model = ParlerTTSForConditionalGeneration.from_pretrained(repo_id)
         tokenizer = AutoTokenizer.from_pretrained(repo_id)
-        
-        return (model,tokenizer,)
+        model={"model":model,"tokenizer":tokenizer}
+        return (model,)
 
 
 class ParlerTTS_Sampler:
@@ -48,8 +43,7 @@ class ParlerTTS_Sampler:
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "model": ("MODEL",),
-                "tokenizer": ("MODEL",),
+                "model": ("PTTSMODEL",),
                 "prompt": ("STRING", {"multiline": True, "default": "Hey, how are you doing today?"}),
                 "description": ("STRING", {"multiline": True,
                                            "default": "A female speaker with a slightly low-pitched voice "
@@ -64,20 +58,20 @@ class ParlerTTS_Sampler:
     FUNCTION = "prompt2audio"
     CATEGORY = "Parler_TTS"
 
-    def prompt2audio(self, model,tokenizer, prompt, description):
+    def prompt2audio(self, model, prompt, description):
+        
+        tokenizer=model.get("tokenizer")
+        model = model.get("model")
+        model.to(device)
+        
         input_ids = tokenizer(description, return_tensors="pt").input_ids.to(device)
         prompt_input_ids = tokenizer(prompt, return_tensors="pt").input_ids.to(device)
         
         generation = model.generate(input_ids=input_ids, prompt_input_ids=prompt_input_ids)
         audio_arr = generation.cpu().numpy().squeeze()
-
-        file_name = "Parler_TTS" + ''.join(random.choice("0123456789") for _ in range(5)) + ".wav"
-        path = os.path.join(folder_paths.output_directory, file_name)
-        sf.write(path, audio_arr, model.config.sampling_rate)
-        print(f"saving in path {path}")
+        waveform=torch.from_numpy(audio_arr).unsqueeze(0)
         
-        waveform, sample_rate = torchaudio.load(path)
-        audio= {"waveform": waveform.unsqueeze(0), "sample_rate": sample_rate}
+        audio= {"waveform": waveform.unsqueeze(0), "sample_rate": model.config.sampling_rate}
         return (audio,)
    
 
