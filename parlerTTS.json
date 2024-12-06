@@ -1,0 +1,1219 @@
+{
+  "last_node_id": 27,
+  "last_link_id": 42,
+  "nodes": [
+    {
+      "id": 9,
+      "type": "PreviewImage",
+      "pos": [
+        10542,
+        287
+      ],
+      "size": [
+        410.51513671875,
+        399.727294921875
+      ],
+      "flags": {},
+      "order": 14,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 9
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "Node name for S&R": "PreviewImage"
+      },
+      "widgets_values": []
+    },
+    {
+      "id": 7,
+      "type": "SapiensSampler",
+      "pos": [
+        10168,
+        184
+      ],
+      "size": [
+        315,
+        258
+      ],
+      "flags": {},
+      "order": 10,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL_SAPIEN",
+          "link": 7
+        },
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 8
+        }
+      ],
+      "outputs": [
+        {
+          "name": "seg_img",
+          "type": "IMAGE",
+          "links": null
+        },
+        {
+          "name": "depth_img",
+          "type": "IMAGE",
+          "links": null
+        },
+        {
+          "name": "normal_img",
+          "type": "IMAGE",
+          "links": null
+        },
+        {
+          "name": "pose_img",
+          "type": "IMAGE",
+          "links": [
+            9
+          ],
+          "slot_index": 3
+        },
+        {
+          "name": "mask",
+          "type": "MASK",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "SapiensSampler"
+      },
+      "widgets_values": [
+        "5.Left_Hand",
+        "",
+        true,
+        255,
+        255,
+        255
+      ]
+    },
+    {
+      "id": 8,
+      "type": "VHS_LoadVideo",
+      "pos": [
+        9888,
+        462
+      ],
+      "size": [
+        235.1999969482422,
+        491.20001220703125
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "meta_batch",
+          "type": "VHS_BatchManager",
+          "link": null,
+          "shape": 7
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": null,
+          "shape": 7
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            8
+          ],
+          "slot_index": 0
+        },
+        {
+          "name": "frame_count",
+          "type": "INT",
+          "links": null
+        },
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "links": null
+        },
+        {
+          "name": "video_info",
+          "type": "VHS_VIDEOINFO",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VHS_LoadVideo"
+      },
+      "widgets_values": {
+        "video": "768-768_1.mp4",
+        "force_rate": 0,
+        "force_size": "Disabled",
+        "custom_width": 512,
+        "custom_height": 512,
+        "frame_load_cap": 1,
+        "skip_first_frames": 0,
+        "select_every_nth": 1,
+        "choose video to upload": "image",
+        "videopreview": {
+          "hidden": false,
+          "paused": false,
+          "params": {
+            "frame_load_cap": 1,
+            "skip_first_frames": 0,
+            "force_rate": 0,
+            "filename": "768-768_1.mp4",
+            "type": "input",
+            "format": "video/mp4",
+            "select_every_nth": 1
+          }
+        }
+      }
+    },
+    {
+      "id": 6,
+      "type": "SapiensLoader",
+      "pos": [
+        9632,
+        124
+      ],
+      "size": [
+        315,
+        298
+      ],
+      "flags": {},
+      "order": 1,
+      "mode": 4,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "model",
+          "type": "MODEL_SAPIEN",
+          "links": [
+            7
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "SapiensLoader"
+      },
+      "widgets_values": [
+        "none",
+        "none",
+        "none",
+        "pose\\sapiens_1b_goliath_best_goliath_AP_639_torchscript.pt2",
+        "float32_torch",
+        0.5,
+        true,
+        false,
+        false,
+        true,
+        false
+      ]
+    },
+    {
+      "id": 4,
+      "type": "LoadAudio",
+      "pos": [
+        7929,
+        146
+      ],
+      "size": [
+        315,
+        124
+      ],
+      "flags": {},
+      "order": 2,
+      "mode": 4,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "AUDIO",
+          "type": "AUDIO",
+          "links": [
+            26
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoadAudio"
+      },
+      "widgets_values": [
+        "echomimicv2_woman.wav",
+        null,
+        ""
+      ]
+    },
+    {
+      "id": 12,
+      "type": "VHS_VideoInfo",
+      "pos": [
+        7895,
+        633
+      ],
+      "size": [
+        393,
+        206
+      ],
+      "flags": {},
+      "order": 11,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "video_info",
+          "type": "VHS_VIDEOINFO",
+          "link": 14
+        }
+      ],
+      "outputs": [
+        {
+          "name": "source_fps🟨",
+          "type": "FLOAT",
+          "links": [
+            25
+          ],
+          "slot_index": 0
+        },
+        {
+          "name": "source_frame_count🟨",
+          "type": "INT",
+          "links": null
+        },
+        {
+          "name": "source_duration🟨",
+          "type": "FLOAT",
+          "links": null
+        },
+        {
+          "name": "source_width🟨",
+          "type": "INT",
+          "links": [],
+          "slot_index": 3
+        },
+        {
+          "name": "source_height🟨",
+          "type": "INT",
+          "links": null
+        },
+        {
+          "name": "loaded_fps🟦",
+          "type": "FLOAT",
+          "links": null,
+          "slot_index": 5
+        },
+        {
+          "name": "loaded_frame_count🟦",
+          "type": "INT",
+          "links": null
+        },
+        {
+          "name": "loaded_duration🟦",
+          "type": "FLOAT",
+          "links": null
+        },
+        {
+          "name": "loaded_width🟦",
+          "type": "INT",
+          "links": null
+        },
+        {
+          "name": "loaded_height🟦",
+          "type": "INT",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VHS_VideoInfo"
+      },
+      "widgets_values": {}
+    },
+    {
+      "id": 3,
+      "type": "LoadImage",
+      "pos": [
+        7573,
+        97
+      ],
+      "size": [
+        315,
+        314
+      ],
+      "flags": {},
+      "order": 3,
+      "mode": 4,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            21
+          ]
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": [
+        "0048.png",
+        "image"
+      ]
+    },
+    {
+      "id": 17,
+      "type": "VHS_VideoCombine",
+      "pos": [
+        8681,
+        256
+      ],
+      "size": [
+        326.5581970214844,
+        306
+      ],
+      "flags": {},
+      "order": 18,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 31,
+          "shape": 7
+        },
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "link": 32,
+          "shape": 7
+        },
+        {
+          "name": "meta_batch",
+          "type": "VHS_BatchManager",
+          "link": null,
+          "shape": 7
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": null,
+          "shape": 7
+        },
+        {
+          "name": "frame_rate",
+          "type": "FLOAT",
+          "link": 33,
+          "widget": {
+            "name": "frame_rate"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Filenames",
+          "type": "VHS_FILENAMES",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VHS_VideoCombine"
+      },
+      "widgets_values": {
+        "frame_rate": 43,
+        "loop_count": 0,
+        "filename_prefix": "AnimateDiff",
+        "format": "video/h264-mp4",
+        "pix_fmt": "yuv420p",
+        "crf": 19,
+        "save_metadata": true,
+        "pingpong": false,
+        "save_output": true,
+        "videopreview": {
+          "hidden": false,
+          "paused": false,
+          "params": {
+            "filename": "AnimateDiff_00002-audio.mp4",
+            "subfolder": "",
+            "type": "output",
+            "format": "video/h264-mp4",
+            "frame_rate": 23.976023976023978
+          }
+        }
+      }
+    },
+    {
+      "id": 13,
+      "type": "Echo_Sampler",
+      "pos": [
+        8329,
+        272
+      ],
+      "size": [
+        315,
+        494
+      ],
+      "flags": {},
+      "order": 15,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 21
+        },
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "link": 26
+        },
+        {
+          "name": "model",
+          "type": "MODEL_PIPE_E",
+          "link": 17
+        },
+        {
+          "name": "face_detector",
+          "type": "MODEL_FACE_E",
+          "link": 18
+        },
+        {
+          "name": "visualizer",
+          "type": "MODEL_VISUAL_E",
+          "link": 19,
+          "shape": 7
+        },
+        {
+          "name": "video_images",
+          "type": "IMAGE",
+          "link": 20,
+          "shape": 7
+        },
+        {
+          "name": "fps",
+          "type": "FLOAT",
+          "link": 25,
+          "widget": {
+            "name": "fps"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "links": [
+            31
+          ],
+          "slot_index": 0
+        },
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "links": [
+            32
+          ],
+          "slot_index": 1
+        },
+        {
+          "name": "frame_rate",
+          "type": "FLOAT",
+          "links": [
+            33
+          ],
+          "slot_index": 2
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "Echo_Sampler"
+      },
+      "widgets_values": [
+        "none",
+        1018493694,
+        "randomize",
+        2.5,
+        30,
+        25,
+        16000,
+        0.1,
+        0.8,
+        12,
+        3,
+        50,
+        768,
+        768,
+        false
+      ]
+    },
+    {
+      "id": 11,
+      "type": "VHS_LoadVideo",
+      "pos": [
+        7602,
+        465
+      ],
+      "size": [
+        235.1999969482422,
+        491.20001220703125
+      ],
+      "flags": {},
+      "order": 4,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "meta_batch",
+          "type": "VHS_BatchManager",
+          "link": null,
+          "shape": 7
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": null,
+          "shape": 7
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            20
+          ],
+          "slot_index": 0
+        },
+        {
+          "name": "frame_count",
+          "type": "INT",
+          "links": null
+        },
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "links": null,
+          "slot_index": 2
+        },
+        {
+          "name": "video_info",
+          "type": "VHS_VIDEOINFO",
+          "links": [
+            14
+          ],
+          "slot_index": 3
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VHS_LoadVideo"
+      },
+      "widgets_values": {
+        "video": "768-768_3.mp4",
+        "force_rate": 0,
+        "force_size": "Disabled",
+        "custom_width": 512,
+        "custom_height": 512,
+        "frame_load_cap": 60,
+        "skip_first_frames": 0,
+        "select_every_nth": 1,
+        "choose video to upload": "image",
+        "videopreview": {
+          "hidden": false,
+          "paused": false,
+          "params": {
+            "frame_load_cap": 60,
+            "skip_first_frames": 0,
+            "force_rate": 0,
+            "filename": "768-768_3.mp4",
+            "type": "input",
+            "format": "video/mp4",
+            "select_every_nth": 1
+          }
+        }
+      }
+    },
+    {
+      "id": 1,
+      "type": "Echo_LoadModel",
+      "pos": [
+        7932,
+        338
+      ],
+      "size": [
+        315,
+        242
+      ],
+      "flags": {},
+      "order": 5,
+      "mode": 4,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "model",
+          "type": "MODEL_PIPE_E",
+          "links": [
+            17
+          ],
+          "slot_index": 0
+        },
+        {
+          "name": "face_detector",
+          "type": "MODEL_FACE_E",
+          "links": [
+            18
+          ],
+          "slot_index": 1
+        },
+        {
+          "name": "visualizer",
+          "type": "MODEL_VISUAL_E",
+          "links": [
+            19
+          ],
+          "slot_index": 2
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "Echo_LoadModel"
+      },
+      "widgets_values": [
+        "sd-vae-ft-mse.safetensors",
+        true,
+        "pose_normal",
+        false,
+        false,
+        false,
+        "V2"
+      ]
+    },
+    {
+      "id": 22,
+      "type": "SaveImage",
+      "pos": [
+        10741.8857421875,
+        1778.646484375
+      ],
+      "size": [
+        304.4555358886719,
+        331.5419616699219
+      ],
+      "flags": {},
+      "order": 16,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 37
+        }
+      ],
+      "outputs": [],
+      "properties": {},
+      "widgets_values": [
+        "ComfyUI"
+      ]
+    },
+    {
+      "id": 18,
+      "type": "Qwen2_Vl_Model",
+      "pos": [
+        9743,
+        1377
+      ],
+      "size": [
+        315,
+        202
+      ],
+      "flags": {},
+      "order": 6,
+      "mode": 4,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "model",
+          "type": "MODEL_QWEN_VL",
+          "links": [
+            34
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "Qwen2_Vl_Model"
+      },
+      "widgets_values": [
+        "F:/test/ComfyUI/models/diffusers/black-forest-labs/FLUX.1-dev",
+        "F:/test/ComfyUI/models/diffusers/Qwen/qwen2-vl",
+        "",
+        "",
+        "",
+        "variation",
+        true
+      ]
+    },
+    {
+      "id": 21,
+      "type": "LoadImage",
+      "pos": [
+        9759,
+        1799
+      ],
+      "size": [
+        315,
+        314
+      ],
+      "flags": {},
+      "order": 7,
+      "mode": 4,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            36
+          ]
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": [
+        "cottage.png",
+        "image"
+      ]
+    },
+    {
+      "id": 20,
+      "type": "LoadImage",
+      "pos": [
+        9419,
+        1615
+      ],
+      "size": [
+        315,
+        314
+      ],
+      "flags": {},
+      "order": 8,
+      "mode": 4,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            35
+          ]
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": [
+        "Yoshua_Bengio (2).jpg",
+        "image"
+      ]
+    },
+    {
+      "id": 19,
+      "type": "Qwen2_Vl_Sampler",
+      "pos": [
+        10141.77734375,
+        1643.9468994140625
+      ],
+      "size": [
+        418.1999816894531,
+        352
+      ],
+      "flags": {},
+      "order": 12,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL_QWEN_VL",
+          "link": 34
+        },
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 35
+        },
+        {
+          "name": "mask",
+          "type": "MASK",
+          "link": null,
+          "shape": 7
+        },
+        {
+          "name": "reference_image",
+          "type": "IMAGE",
+          "link": 36,
+          "shape": 7
+        }
+      ],
+      "outputs": [
+        {
+          "name": "image_output_name",
+          "type": "IMAGE",
+          "links": [
+            37
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "Qwen2_Vl_Sampler"
+      },
+      "widgets_values": [
+        "1 man",
+        28,
+        7.5,
+        0.8,
+        0,
+        0,
+        0,
+        0.4,
+        0.2,
+        "1:1"
+      ]
+    },
+    {
+      "id": 26,
+      "type": "ParlerTTS_LoadModel",
+      "pos": [
+        11890.095703125,
+        1292.8907470703125
+      ],
+      "size": [
+        315,
+        58
+      ],
+      "flags": {},
+      "order": 9,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "model",
+          "type": "PTTSMODEL",
+          "links": [
+            41
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ParlerTTS_LoadModel"
+      },
+      "widgets_values": [
+        "F:/test/ComfyUI/models/diffusers/parler-tts/parler-tts-mini-jenny-30H"
+      ]
+    },
+    {
+      "id": 27,
+      "type": "ParlerTTS_Sampler",
+      "pos": [
+        12250.1982421875,
+        1290.1907958984375
+      ],
+      "size": [
+        400,
+        200
+      ],
+      "flags": {},
+      "order": 13,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "PTTSMODEL",
+          "link": 41
+        }
+      ],
+      "outputs": [
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "links": [
+            42
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ParlerTTS_Sampler"
+      },
+      "widgets_values": [
+        "Parler-TTS is a lightweight text-to-speech (TTS) model that can generate high-quality, natural sounding speech in the style of a given speaker (gender, pitch, speaking style, etc)",
+        "A female speaker with a slightly low-pitched voice delivers her words quite expressively, in a very confined sounding environment with clear audio quality. She speaks very fast."
+      ]
+    },
+    {
+      "id": 25,
+      "type": "SaveAudio",
+      "pos": [
+        12674.5869140625,
+        1308.7044677734375
+      ],
+      "size": [
+        336.9787292480469,
+        126.04888153076172
+      ],
+      "flags": {},
+      "order": 17,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "link": 42
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "Node name for S&R": "SaveAudio"
+      },
+      "widgets_values": [
+        "audio/ComfyUI",
+        null
+      ]
+    }
+  ],
+  "links": [
+    [
+      7,
+      6,
+      0,
+      7,
+      0,
+      "MODEL_SAPIEN"
+    ],
+    [
+      8,
+      8,
+      0,
+      7,
+      1,
+      "IMAGE"
+    ],
+    [
+      9,
+      7,
+      3,
+      9,
+      0,
+      "IMAGE"
+    ],
+    [
+      14,
+      11,
+      3,
+      12,
+      0,
+      "VHS_VIDEOINFO"
+    ],
+    [
+      17,
+      1,
+      0,
+      13,
+      2,
+      "MODEL_PIPE_E"
+    ],
+    [
+      18,
+      1,
+      1,
+      13,
+      3,
+      "MODEL_FACE_E"
+    ],
+    [
+      19,
+      1,
+      2,
+      13,
+      4,
+      "MODEL_VISUAL_E"
+    ],
+    [
+      20,
+      11,
+      0,
+      13,
+      5,
+      "IMAGE"
+    ],
+    [
+      21,
+      3,
+      0,
+      13,
+      0,
+      "IMAGE"
+    ],
+    [
+      25,
+      12,
+      0,
+      13,
+      6,
+      "FLOAT"
+    ],
+    [
+      26,
+      4,
+      0,
+      13,
+      1,
+      "AUDIO"
+    ],
+    [
+      31,
+      13,
+      0,
+      17,
+      0,
+      "IMAGE"
+    ],
+    [
+      32,
+      13,
+      1,
+      17,
+      1,
+      "AUDIO"
+    ],
+    [
+      33,
+      13,
+      2,
+      17,
+      4,
+      "FLOAT"
+    ],
+    [
+      34,
+      18,
+      0,
+      19,
+      0,
+      "MODEL_QWEN_VL"
+    ],
+    [
+      35,
+      20,
+      0,
+      19,
+      1,
+      "IMAGE"
+    ],
+    [
+      36,
+      21,
+      0,
+      19,
+      3,
+      "IMAGE"
+    ],
+    [
+      37,
+      19,
+      0,
+      22,
+      0,
+      "IMAGE"
+    ],
+    [
+      41,
+      26,
+      0,
+      27,
+      0,
+      "PTTSMODEL"
+    ],
+    [
+      42,
+      27,
+      0,
+      25,
+      0,
+      "AUDIO"
+    ]
+  ],
+  "groups": [
+    {
+      "id": 1,
+      "title": "Group",
+      "bounding": [
+        7485,
+        -99,
+        1764,
+        1246
+      ],
+      "color": "#3f789e",
+      "font_size": 24,
+      "flags": {}
+    },
+    {
+      "id": 2,
+      "title": "Group",
+      "bounding": [
+        9615,
+        10,
+        1386,
+        991
+      ],
+      "color": "#3f789e",
+      "font_size": 24,
+      "flags": {}
+    },
+    {
+      "id": 3,
+      "title": "Group",
+      "bounding": [
+        9368.8720703125,
+        1303.2388916015625,
+        1786.6634521484375,
+        930.0406494140625
+      ],
+      "color": "#3f789e",
+      "font_size": 24,
+      "flags": {}
+    }
+  ],
+  "config": {},
+  "extra": {
+    "ds": {
+      "scale": 1.228459735736816,
+      "offset": [
+        -11785.892798047287,
+        -1035.3008723936941
+      ]
+    }
+  },
+  "version": 0.4
+}
