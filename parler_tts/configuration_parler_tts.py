@@ -17,11 +17,15 @@
 from transformers import AutoConfig, logging
 from transformers.configuration_utils import PretrainedConfig
 
+from importlib.metadata import version
+from packaging.version import Version
+
+use_dac_on_the_hub = Version(version("transformers")) > Version("4.44.2dev")
 
 logger = logging.get_logger(__name__)
 
-MUSICGEN_PRETRAINED_CONFIG_ARCHIVE_MAP = {
-    "facebook/parler_tts-small": "https://huggingface.co/facebook/parler_tts-small/resolve/main/config.json",
+PARLER_TTS_PRETRAINED_CONFIG_ARCHIVE_MAP = {
+    "parler-tts/parler-tts-mini-v1": "https://huggingface.co/parler-tts/parler-tts-mini-v1/resolve/main/config.json",
     # See all ParlerTTS models at https://huggingface.co/models?filter=parler_tts
 }
 
@@ -31,7 +35,7 @@ class ParlerTTSDecoderConfig(PretrainedConfig):
     This is the configuration class to store the configuration of an [`ParlerTTSDecoder`]. It is used to instantiate a
     Parler-TTS decoder according to the specified arguments, defining the model architecture. Instantiating a
     configuration with the defaults will yield a similar configuration to that of the Parler-TTS
-    [facebook/parler_tts-small](https://huggingface.co/facebook/parler_tts-small) architecture.
+    [parler-tts/parler-tts-mini-v1](https://huggingface.co/parler-tts/parler-tts-mini-v1) architecture.
 
     Configuration objects inherit from [`PretrainedConfig`] and can be used to control the model outputs. Read the
     documentation from [`PretrainedConfig`] for more information.
@@ -91,6 +95,10 @@ class ParlerTTSDecoderConfig(PretrainedConfig):
             The base period of the RoPE embeddings.
         cross_attention_implementation_strategy (`str`, *optional*):
             If not specified, the cross-attention implementation will be the same as `_attn_implementation`. If `always_eager`, it will always be the eager implementation. If `always_sdpa`, it will always be the sdpa implementation.
+        use_fused_lm_heads(`bool`, *optional*, defaults to `False`):
+            Whether to fuse audio LM heads instead of applying them sequentially.
+        codebook_weights(`List[int]`, *optional*):
+            Weights applied to each codebook when computing the loss.
     """
 
     model_type = "parler_tts_decoder"
@@ -122,6 +130,8 @@ class ParlerTTSDecoderConfig(PretrainedConfig):
         rope_embeddings=False,
         rope_theta=10_000.0,
         cross_attention_implementation_strategy=None,
+        use_fused_lm_heads=False,
+        codebook_weights=None,
         **kwargs,
     ):
         self.vocab_size = vocab_size
@@ -148,7 +158,11 @@ class ParlerTTSDecoderConfig(PretrainedConfig):
         self.rope_embeddings = rope_embeddings
         self.rope_theta = rope_theta
         self.cross_attention_implementation_strategy = cross_attention_implementation_strategy
+        self.use_fused_lm_heads = use_fused_lm_heads
+        self.codebook_weights = codebook_weights
 
+        if codebook_weights is not None and len(codebook_weights) != num_codebooks:
+            raise ValueError(f"`codebook_weights` has length {len(codebook_weights)} when it should be of length {num_codebooks}.")
         super().__init__(
             pad_token_id=pad_token_id,
             bos_token_id=bos_token_id,
@@ -203,7 +217,7 @@ class ParlerTTSConfig(PretrainedConfig):
     ...     text_encoder_config, audio_encoder_config, decoder_config
     ... )
 
-    >>> # Initializing a ParlerTTSForConditionalGeneration (with random weights) from the facebook/parler_tts-small style configuration
+    >>> # Initializing a ParlerTTSForConditionalGeneration (with random weights) from the parler-tts/parler-tts-mini-v1 style configuration
     >>> model = ParlerTTSForConditionalGeneration(configuration)
 
     >>> # Accessing the model configuration
@@ -233,6 +247,11 @@ class ParlerTTSConfig(PretrainedConfig):
 
         audio_encoder_config = kwargs.pop("audio_encoder")
         audio_encoder_model_type = audio_encoder_config.pop("model_type")
+
+        model_version = kwargs.get("transformers_version", None)
+        if model_version is not None and Version(model_version) <= Version("4.44.2dev") and use_dac_on_the_hub and audio_encoder_model_type=="dac":
+            # here we have to manually change model type if DAC based on transformers version
+            audio_encoder_model_type = "dac_on_the_hub"
 
         decoder_config = kwargs.pop("decoder")
 
@@ -270,21 +289,3 @@ class ParlerTTSConfig(PretrainedConfig):
     # This is a property because you might want to change the codec model on the fly
     def sampling_rate(self):
         return self.audio_encoder.sampling_rate
-
-    # Copy from musicgen
-    @property
-    def _attn_implementation(self):
-        # This property is made private for now (as it cannot be changed and a PreTrainedModel.use_attn_implementation method needs to be implemented.)
-        if hasattr(self, "_attn_implementation_internal"):
-            if self._attn_implementation_internal is None:
-                # `config.attn_implementation` should never be None, for backward compatibility.
-                return "eager"
-            else:
-                return self._attn_implementation_internal
-        else:
-            return "eager"
-
-    @_attn_implementation.setter
-    def _attn_implementation(self, value):
-        self._attn_implementation_internal = value
-        self.decoder._attn_implementation = value
