@@ -44,7 +44,7 @@ X:/XXX/XXX/parler-tts/parler-tts-mini-jenny-30H
 
 4.Example   
 -------
-![](https://github.com/smthemex/ComfyUI_ParlerTTS/blob/main/example.png)
+![](https://github.com/smthemex/ComfyUI_ParlerTTS/blob/main/exampleA.png)
 
 
 5.Citation
