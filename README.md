@@ -6,12 +6,13 @@ You can find the project for Parler-TTS here: [Parler-TTS](https://github.com/hu
 
 Update:
 -----
-**2024/12/06**  
-*  同步A new version of ParlerTTS的最新代码，适配更高版本的transformers;
-*  Synchronize the latest code of a new version of ParlerTTS and adapt to higher versions of transformers
-
+**2024/12/25**  
+* fix bug for diffusers mask-attention,from issues [#11](https://github.com/smthemex/ComfyUI_ParlerTTS/issues/11)
+* 修复某些版本的diffusers因为mask-attention参数缺失，可能会导致错误的问题
 
 **Previous updates**     
+*  同步A new version of ParlerTTS的最新代码，适配更高版本的transformers;
+*  Synchronize the latest code of a new version of ParlerTTS and adapt to higher versions of transformers
 *  two new Parler-TTS checkpoints [parler-tts-mini-v1](https://huggingface.co/parler-tts/parler-tts-mini-v1/tree/main)   and [parler-tts-large-v1](https://huggingface.co/parler-tts/parler-tts-large-v1/tree/main)      
 * fix bug and support comfyUI audio save and view...  
 * 新模型parler-tts/parler-tts-mini-jenny-30H，在描述语中，需要添加关键词Jenny   
