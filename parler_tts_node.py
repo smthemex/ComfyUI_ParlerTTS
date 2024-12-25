@@ -64,10 +64,21 @@ class ParlerTTS_Sampler:
         model = model.get("model")
         model.to(device)
         
-        input_ids = tokenizer(description, return_tensors="pt").input_ids.to(device)
-        prompt_input_ids = tokenizer(prompt, return_tensors="pt").input_ids.to(device)
+        # Tokenize and create attention masks
+        # https://github.com/smthemex/ComfyUI_ParlerTTS/issues/11
+        description_encoding = tokenizer(description, return_tensors="pt", padding=True, truncation=True)
+        prompt_encoding = tokenizer(prompt, return_tensors="pt", padding=True, truncation=True)
         
-        generation = model.generate(input_ids=input_ids, prompt_input_ids=prompt_input_ids)
+        input_ids = description_encoding.input_ids.to(device)
+        prompt_input_ids = prompt_encoding.input_ids.to(device)
+        attention_mask = description_encoding.attention_mask.to(device)
+        
+        generation = model.generate(
+            input_ids=input_ids,
+            prompt_input_ids=prompt_input_ids,
+            attention_mask=attention_mask
+        )
+        
         audio_arr = generation.cpu().numpy().squeeze()
         waveform=torch.from_numpy(audio_arr).unsqueeze(0)
         
