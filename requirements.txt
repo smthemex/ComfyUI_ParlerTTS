@@ -1,5 +1,6 @@
 transformers
 torch
+git+https://github.com/huggingface/parler-tts.git
 #sentencepiece
 #descript-audio-codec
 #black~=23.1
