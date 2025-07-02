@@ -1,9 +1,9 @@
 # !/usr/bin/env python
 # -*- coding: UTF-8 -*-
-
+from pathlib import PureWindowsPath
 import torch
 from huggingface_hub import snapshot_download
-from .parler_tts import ParlerTTSForConditionalGeneration
+from .parler_tts import ParlerTTSForConditionalGeneration,ParlerTTSConfig
 from transformers import AutoTokenizer
 device = "cuda:0" if torch.cuda.is_available() else "cpu"
 
@@ -28,8 +28,14 @@ class ParlerTTS_LoadModel:
         if not repo_id:
             print("no repo,download default model'parler-tts/parler_tts_mini_v0.1' ")
             repo_id = snapshot_download("parler-tts/parler_tts_mini_v0.1")
-        
-        model = ParlerTTSForConditionalGeneration.from_pretrained(repo_id)
+            print("download model from:"+repo_id)
+        else:
+            repo_id = PureWindowsPath(repo_id).as_posix()
+        if "large" in repo_id.lower():
+            parler_tts_config = ParlerTTSConfig.from_pretrained(repo_id)
+            model = ParlerTTSForConditionalGeneration.from_pretrained(repo_id, config=parler_tts_config,trust_remote_code=True)
+        else:
+            model = ParlerTTSForConditionalGeneration.from_pretrained(repo_id)
         tokenizer = AutoTokenizer.from_pretrained(repo_id)
         model={"model":model,"tokenizer":tokenizer}
         return (model,)
