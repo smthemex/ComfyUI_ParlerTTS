@@ -6,16 +6,18 @@ You can find the project for Parler-TTS here: [Parler-TTS](https://github.com/hu
 
 Update:
 -----
-**2024/12/25**  
-* fix bug for diffusers mask-attention,from issues [#11](https://github.com/smthemex/ComfyUI_ParlerTTS/issues/11)
-* 修复某些版本的diffusers因为mask-attention参数缺失，可能会导致错误的问题
+**2025/07/02**  
+* if tranformers >4.53.0 maybe cause error, i change some codes,maybe useful or not.
 
-**Previous updates**     
+
+**Previous updates**    
+* 修复某些版本的diffusers因为mask-attention参数缺失，可能会导致错误的问题;
 *  同步A new version of ParlerTTS的最新代码，适配更高版本的transformers;
+*  新模型parler-tts/parler-tts-mini-jenny-30H，在描述语中，需要添加关键词Jenny   
+ * fix bug for diffusers mask-attention,from issues [#11](https://github.com/smthemex/ComfyUI_ParlerTTS/issues/11)
 *  Synchronize the latest code of a new version of ParlerTTS and adapt to higher versions of transformers
 *  two new Parler-TTS checkpoints [parler-tts-mini-v1](https://huggingface.co/parler-tts/parler-tts-mini-v1/tree/main)   and [parler-tts-large-v1](https://huggingface.co/parler-tts/parler-tts-large-v1/tree/main)      
 * fix bug and support comfyUI audio save and view...  
-* 新模型parler-tts/parler-tts-mini-jenny-30H，在描述语中，需要添加关键词Jenny   
 * New model: parler-tts/parler-tts-mini-jenny-30H    this model must using keyword “Jenny” in the voice description:
 
 1.Installation
@@ -41,7 +43,7 @@ Use the default repo_id or fill in "parler-tts/parler-tts-mini-jenny-30H"  ,"par
 
 3.2 offline  
 在repo_id填写绝对地址，Fill in the absolute address in the repo id ：     
-X:/XXX/XXX/parler-tts/parler-tts-mini-jenny-30H
+X:/XXX/XXX/parler-tts/parler-tts-mini-jenny-30H or X:\XXX\XXX\parler-tts\parler-tts-mini-jenny-30H
 
 4.Example   
 -------
