@@ -1,0 +1,12 @@
+{
+  "_from_model_config": true,
+  "bos_token_id": 1025,
+  "decoder_start_token_id": 1025,
+  "min_new_tokens": 10,
+  "do_sample": true,
+  "eos_token_id": 1024,
+  "guidance_scale": 1,
+  "max_length": 2580,
+  "pad_token_id": 1024,
+  "transformers_version": "4.40.2"
+}

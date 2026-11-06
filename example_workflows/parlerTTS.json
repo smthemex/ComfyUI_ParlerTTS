@@ -1,0 +1,190 @@
+{
+  "id": "3f7f1beb-b529-4cfe-bea7-18dec800d2b1",
+  "revision": 0,
+  "last_node_id": 8,
+  "last_link_id": 5,
+  "nodes": [
+    {
+      "id": 6,
+      "type": "SaveAudio",
+      "pos": [
+        1453.8578809551166,
+        91.6687683903314
+      ],
+      "size": [
+        315,
+        112
+      ],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "link": 4
+        }
+      ],
+      "outputs": [
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "SaveAudio"
+      },
+      "widgets_values": [
+        "parler_tts"
+      ],
+      "widgets_values_named": {
+        "filename_prefix": "parler_tts"
+      }
+    },
+    {
+      "id": 7,
+      "type": "ParlerTTS_Sampler",
+      "pos": [
+        993.4810360179226,
+        54.8059261546415
+      ],
+      "size": [
+        400,
+        334
+      ],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "PARLERTTS_MODEL",
+          "link": 5
+        }
+      ],
+      "outputs": [
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "links": [
+            4
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ParlerTTS_Sampler"
+      },
+      "widgets_values": [
+        "A female speaker with a slightly low-pitched voice delivers her words quite expressively, in a very confined sounding environment with clear audio quality. She speaks very fast.",
+        "Hey, how are you doing today?",
+        443618656955511,
+        "randomize",
+        1,
+        50,
+        1,
+        -1,
+        -1,
+        "enable"
+      ],
+      "widgets_values_named": {
+        "description": "A female speaker with a slightly low-pitched voice delivers her words quite expressively, in a very confined sounding environment with clear audio quality. She speaks very fast.",
+        "voice_prompt": "Hey, how are you doing today?",
+        "seed": 443618656955511,
+        "control_after_generate": "randomize",
+        "temperature": 1,
+        "top_k": 50,
+        "top_p": 1,
+        "max_length": -1,
+        "min_new_tokens": -1,
+        "do_sample": "enable"
+      },
+      "color": "#322",
+      "bgcolor": "#533"
+    },
+    {
+      "id": 8,
+      "type": "ParlerTTS_LoadModel",
+      "pos": [
+        592.2522389131432,
+        78.23230802249287
+      ],
+      "size": [
+        337.8794921875,
+        106
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "model",
+          "type": "PARLERTTS_MODEL",
+          "links": [
+            5
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ParlerTTS_LoadModel"
+      },
+      "widgets_values": [
+        "parler-tts-mini-v1.safetensors",
+        "auto",
+        "fp32"
+      ],
+      "widgets_values_named": {
+        "ckpt_name": "parler-tts-mini-v1.safetensors",
+        "preset": "auto",
+        "dtype": "fp32"
+      },
+      "color": "#322",
+      "bgcolor": "#533"
+    }
+  ],
+  "links": [
+    [
+      4,
+      7,
+      0,
+      6,
+      0,
+      "AUDIO"
+    ],
+    [
+      5,
+      8,
+      0,
+      7,
+      0,
+      "PARLERTTS_MODEL"
+    ]
+  ],
+  "groups": [
+    {
+      "id": 1,
+      "title": "Group",
+      "bounding": [
+        538.1083005498745,
+        -40.18905168919792,
+        1301.3124183006532,
+        542.4198532204222
+      ],
+      "color": "#3f789e",
+      "flags": {}
+    }
+  ],
+  "config": {},
+  "extra": {
+    "ds": {
+      "scale": 1.1400894187779436,
+      "offset": [
+        -382.15565828610056,
+        238.24370827269718
+      ]
+    },
+    "frontendVersion": "1.58.5"
+  },
+  "version": 0.4
+}

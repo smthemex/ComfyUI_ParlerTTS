@@ -1,16 +1,5 @@
 __version__ = "1.0.0"
 
-# preserved here for legacy reasons
-__model_version__ = "latest"
-
-import audiotools
-
-audiotools.ml.BaseModel.INTERN += ["dac.**"]
-audiotools.ml.BaseModel.EXTERN += ["einops"]
-
-
+# trimmed to the torch-only subset used by parler_core.dac_native
+# (audiotools-dependent model/utils/compare modules were removed)
 from . import nn
-from . import model
-from . import utils
-from .model import DAC
-from .model import DACFile
