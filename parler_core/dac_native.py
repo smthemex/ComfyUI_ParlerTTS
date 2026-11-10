@@ -13,8 +13,8 @@ import numpy as np
 import torch
 from torch import nn
 
-from dac.nn.layers import Snake1d, WNConv1d, WNConvTranspose1d
-from dac.nn.quantize import ResidualVectorQuantize
+from .dac.nn.layers import Snake1d, WNConv1d, WNConvTranspose1d
+from .dac.nn.quantize import ResidualVectorQuantize
 
 
 def _init_weights(m):
